@@ -1,0 +1,18 @@
+EM NOME DO FOGO — SITE ESTÁTICO
+
+Abra index.html no navegador.
+
+Arquivos principais:
+- index.html: tela inicial e acesso local
+- livro.html: manuscrito completo em pergaminho rolável
+- mapas.html: campos para mapas
+- personagens.html: carrossel de personagens
+- autor.html: imagem e biografia
+- styles.css: todo o visual e responsividade
+- script.js: login local, menu, partículas, tamanho da fonte e personagens
+
+IMPORTANTE SOBRE LOGIN
+O login é apenas demonstrativo e usa localStorage. Para autenticação real e banco de dados, será necessário conectar o front-end a uma API/servidor.
+
+COMO ADICIONAR IMAGENS
+Coloque os arquivos na pasta assets e substitua os campos indicados por tags <img>. No carrossel, edite o vetor chars em script.js e informe image:'assets/nome-do-arquivo.jpg'.
