@@ -16,3 +16,7 @@ O login é apenas demonstrativo e usa localStorage. Para autenticação real e b
 
 COMO ADICIONAR IMAGENS
 Coloque os arquivos na pasta assets e substitua os campos indicados por tags <img>. No carrossel, edite o vetor chars em script.js e informe image:'assets/nome-do-arquivo.jpg'.
+
+COMO VAI FUNCIONAR A ARQUITETURA:
+[ Front-end (HTML/JS) ] ──( Requisição HTTP / JSON )──> [ Backend (Spring Boot) ] ──( JPA / Hibernate )──> [ Banco (SQL Server) ]
+
