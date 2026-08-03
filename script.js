@@ -1,4 +1,5 @@
 
+//Lógica Visual
 document.addEventListener('DOMContentLoaded',()=>{
  const menu=document.querySelector('.menu-btn'),nav=document.querySelector('.nav');
  if(menu) menu.addEventListener('click',()=>nav.classList.toggle('open'));
@@ -23,3 +24,37 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.querySelectorAll('[data-font]').forEach(b=>b.addEventListener('click',()=>{const s=document.querySelector('.book-scroll');const cur=parseFloat(getComputedStyle(s).fontSize);s.style.fontSize=Math.max(13,Math.min(26,cur+Number(b.dataset.font)))+'px'}));
  const emb=document.querySelector('.embers');if(emb){for(let i=0;i<30;i++){const e=document.createElement('i');e.className='ember';e.style.left=Math.random()*100+'%';e.style.bottom=(-10-Math.random()*40)+'px';e.style.animationDuration=(5+Math.random()*8)+'s';e.style.animationDelay=(-Math.random()*10)+'s';e.style.opacity=.25+Math.random()*.7;emb.appendChild(e)}}
 });
+
+
+//Integração com o backend
+document.getElementById('seuFormulario').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Impede o recarregamento da página
+
+    // Captura os dados dos campos do seu HTML
+    const dados = {
+        nome: document.getElementById('campoNome').value,
+        email: document.getElementById('campoEmail').value,
+        mensagem: document.getElementById('campoMensagem').value
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/api/contatos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
+
+        if (response.ok) {
+            alert('Dados enviados com sucesso para o banco de dados!');
+            document.getElementById('seuFormulario').reset();
+        } else {
+            alert('Erro ao enviar os dados. Verifique o servidor.');
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Erro ao conectar com o backend.');
+    }
+});
+
