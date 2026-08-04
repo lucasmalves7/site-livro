@@ -21,4 +21,4 @@
 // 🟢 Troque esta URL pela URL real do seu backend Spring Boot quando ele
 //    estiver publicado. Durante o desenvolvimento local, use algo como
 //    'http://localhost:8080/api'.
-const API_BASE_URL = 'https://ENDF.onrender.com/api';
+const API_BASE_URL = 'http://localhost:8080/api';
