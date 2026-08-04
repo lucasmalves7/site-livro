@@ -1,0 +1,49 @@
+EM NOME DO FOGO — SITE (FRONT-END)
+
+Abra index.html no navegador.
+
+Arquivos principais:
+- index.html: tela inicial, login e criação de conta
+- livro.html: manuscrito completo em pergaminho rolável (página inicial após login)
+- mapas.html: EM CONSTRUÇÃO (bloqueada)
+- personagens.html: EM CONSTRUÇÃO (bloqueada)
+- autor.html: EM CONSTRUÇÃO (bloqueada)
+- styles.css: todo o visual e responsividade
+- config.js: [NOVO] endereço (URL) do backend Spring Boot
+- auth.js: [NOVO] login, criação de conta, proteção de páginas e bloqueio
+  das páginas em construção — tudo conectado ao backend via fetch()
+- script.js: menu, abas, carrossel de personagens, tamanho da fonte e
+  efeito de brasas (SEM lógica de login — isso foi para auth.js)
+
+COMO FICOU A AUTENTICAÇÃO
+- Criar conta e Login agora enviam os dados via fetch() para o backend
+  Spring Boot (endereço configurado em config.js), em vez de comparar
+  dados salvos no localStorage.
+- Endpoints esperados no backend:
+    POST {API_BASE_URL}/auth/registro  { email, senha } -> 201 / 409
+    POST {API_BASE_URL}/auth/login     { email, senha } -> 200 { token } / 401
+- Após o login bem-sucedido, o token é salvo no localStorage e o usuário
+  é levado automaticamente para livro.html.
+- livro.html, mapas.html, personagens.html e autor.html verificam, assim
+  que a página carrega, se existe um token salvo. Se não existir, o
+  usuário é redirecionado de volta para index.html — ou seja, ninguém
+  acessa essas páginas sem antes ter criado conta e autenticado.
+- O botão "Sair" (em livro.html) apaga o token salvo e volta para a tela
+  de login.
+
+PÁGINAS EM CONSTRUÇÃO
+- Ao clicar em "Mapas", "Personagens" ou "Autor" no menu, aparece o alert
+  "Página ainda em construção" e a navegação é cancelada.
+- Se alguém tentar abrir essas páginas digitando a URL direto no
+  navegador, elas também bloqueiam o acesso e redirecionam de volta.
+- Quando essas seções estiverem prontas, é só remover o bloqueio em
+  auth.js (constante PAGINAS_EM_CONSTRUCAO e as chamadas de
+  bloquearAcessoDiretoEmConstrucao nos respectivos arquivos .html).
+
+IMPORTANTE
+Este é só o front-end. É necessário que o backend Spring Boot esteja no
+ar, com os endpoints /auth/registro e /auth/login implementados e
+conectados a um banco de dados, para o login funcionar de verdade.
+
+COMO VAI FUNCIONAR A ARQUITETURA:
+[ Front-end (HTML/JS) ] ──( Requisição HTTP / JSON )──> [ Backend (Spring Boot) ] ──( JPA / Hibernate )──> [ Banco (SQL Server) ]

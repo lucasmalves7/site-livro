@@ -1,0 +1,61 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0907"><title>Em Nome do Fogo</title><link rel="stylesheet" href="styles.css">
+<!-- NOVO: config.js (endereço do backend) e auth.js (login/registro/proteção) -->
+<script src="config.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+    <header class="site-header"><a class="brand" href="index.html">
+        <img src="assets/logo.svg" alt="Símbolo de Em Nome do Fogo">
+        <span>Em Nome do Fogo</span>
+    </a><button class="menu-btn" aria-label="Abrir menu">☰</button>
+    <nav class="nav">
+        <a href="livro.html">Livro</a>
+        <a href="mapas.html">Mapas</a>
+        <a href="personagens.html">Personagens</a>
+        <a href="autor.html">Autor</a>
+    </nav></header><main class="hero">
+        <div class="embers"></div>
+        <section class="hero-art" aria-label="Mapa e símbolo do livro">
+            <img src="assets/compass.svg" alt="Rosa dos ventos ancestral">
+        </section>
+        <section class="login-wrap">
+            <div class="parchment">
+            <h1>Acesso ao Códice</h1>
+            <div class="tabs">
+                <button class="active" data-tab="loginPanel">Entrar</button>
+                <button data-tab="registerPanel">Criar conta</button>
+            </div>
+            <div id="loginPanel" class="auth-panel active">
+                <form id="loginForm">
+                    <div class="field">
+                    <label for="loginEmail">E-mail</label>
+                    <input id="loginEmail" name="email" type="email" required autocomplete="email">
+                </div>
+                <div class="field">
+                    <label for="loginPass">Senha</label>
+                    <input id="loginPass" name="password" type="password" required autocomplete="current-password">
+                </div>
+                <button class="primary-btn">Entrar</button>
+                </form>
+            </div>
+            <div id="registerPanel" class="auth-panel">
+                <form id="registerForm">
+                    <div class="field">
+                        <label for="regEmail">E-mail</label>
+                        <input id="regEmail" name="email" type="email" required></div>
+                        <div class="field">
+                            <label for="regPass">Senha</label>
+                            <input id="regPass" name="password" type="password" required></div>
+                            <button class="primary-btn">Criar acesso</button>
+                </form>
+            </div>
+            <div class="form-message">
+
+            </div>
+            <p class="helper">Seus dados são enviados ao servidor e gravados no banco de dados.</p>
+            </div>
+    </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
