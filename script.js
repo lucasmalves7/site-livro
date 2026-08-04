@@ -26,35 +26,44 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 
-//Integração com o backend
-document.getElementById('seuFormulario').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Impede o recarregamento da página
 
-    // Captura os dados dos campos do seu HTML
-    const dados = {
-        nome: document.getElementById('campoNome').value,
-        email: document.getElementById('campoEmail').value,
-        mensagem: document.getElementById('campoMensagem').value
-    };
+// ==========================================
+// INTEGRAÇÃO COM O BACKEND
+// ==========================================
+const form = document.getElementById('seuFormulario');
 
-    try {
-        const response = await fetch('http://localhost:8080/api/contatos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dados)
-        });
+if (form) {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-        if (response.ok) {
-            alert('Dados enviados com sucesso para o banco de dados!');
-            document.getElementById('seuFormulario').reset();
-        } else {
-            alert('Erro ao enviar os dados. Verifique o servidor.');
+        const dados = {
+            nome: document.getElementById('campoNome').value,
+            email: document.getElementById('campoEmail').value,
+            mensagem: document.getElementById('campoMensagem').value
+        };
+
+        try {
+            // 🛑 Como estava antes (Local):
+            // const response = await fetch('http://localhost:8080/api/contatos', { ...
+
+            // 🟢 Como ficará para a Hospedagem na Nuvem:
+            const response = await fetch('https://ENDF.onrender.com/api/contatos', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(dados)
+            });
+
+            if (response.ok) {
+                alert('Enviado com sucesso!');
+                form.reset();
+            } else {
+                alert('Erro ao enviar.');
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            alert('Erro ao conectar com o servidor.');
         }
-    } catch (error) {
-        console.error('Erro na requisição:', error);
-        alert('Erro ao conectar com o backend.');
-    }
-});
-
+    });
+}
