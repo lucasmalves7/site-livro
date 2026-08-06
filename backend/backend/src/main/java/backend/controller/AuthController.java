@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import backend.dto.UsuarioResponse;
+import backend.dto.LoginRequest;
+import backend.dto.LoginResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,5 +31,14 @@ public class AuthController {
         UsuarioResponse usuario = usuarioService.cadastrar(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody @Valid LoginRequest request) {
+
+        LoginResponse response = usuarioService.login(request);
+
+        return ResponseEntity.ok(response);
     }
 }
