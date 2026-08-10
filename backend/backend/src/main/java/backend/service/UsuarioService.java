@@ -74,4 +74,16 @@ public class UsuarioService {
         );
     }
 
+    public UsuarioResponse buscarPorEmail(String email) {
+
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getEmail(),
+                usuario.getDataCadastro()
+        );
+    }
+
 }
