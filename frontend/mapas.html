@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>Mapas | Em Nome do Fogo</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fantasy: {
+                            darkest: '#050505',
+                            dark: '#120a07',
+                            red: '#7a0000',
+                            gold: '#cba135',
+                            muted: '#e5d9b5'
+                        }
+                    },
+                    fontFamily: {
+                        title: ['"Cinzel Decorative"', 'serif'],
+                        body: ['"Lora"', 'serif'],
+                    },
+                    backgroundImage: {
+                        'fire-gradient': 'radial-gradient(circle at center, #2a0505 0%, #050505 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5d9b5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Efeitos de texto */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(203, 161, 53, 0.4), 0 0 20px rgba(122, 0, 0, 0.5);
+        }
+        
+        .text-glow-hover:hover {
+            text-shadow: 0 0 15px rgba(203, 161, 53, 0.8), 0 0 30px rgba(122, 0, 0, 0.9);
+        }
+
+        /* Navegação */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #7a0000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px #7a0000;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        .nav-link.active {
+            color: #cba135;
+        }
+
+        /* Botões do Carrossel */
+        .carousel-btn {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid #7a0000;
+            color: #cba135;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .carousel-btn:hover {
+            background: rgba(122, 0, 0, 0.4);
+            border-color: #cba135;
+            box-shadow: 0 0 15px rgba(122, 0, 0, 0.8), inset 0 0 10px rgba(203, 161, 53, 0.2);
+            color: #fff;
+        }
+
+        /* Partículas (Fagulhas) */
+        .ember {
+            position: fixed;
+            background-color: #ff6600;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            animation: float-up linear infinite;
+            z-index: 0;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(100vh) scale(1); opacity: 1; box-shadow: 0 0 10px #ff6600, 0 0 20px #ff0000; }
+            100% { transform: translateY(-10vh) scale(0.2); opacity: 0; }
+        }
+
+        /* Vinheta */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle, transparent 50%, #000000 120%);
+            z-index: 1;
+        }
+
+        /* Transição do Carrossel */
+        .map-slide {
+            transition: opacity 0.6s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="font-body bg-fire-gradient selection:bg-fantasy-red selection:text-white">
+
+    <!-- Container de Fagulhas -->
+    <div id="particles" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+    <div class="vignette"></div>
+
+    <header class="relative z-20 w-full border-b border-fantasy-red/30 bg-black/60 backdrop-blur-md shadow-[0_4px_30px_rgba(122,0,0,0.2)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Marca / Logo -->
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-full border-2 border-fantasy-red flex items-center justify-center group-hover:border-fantasy-gold transition-colors duration-300 shadow-[0_0_10px_rgba(122,0,0,0.5)] group-hover:shadow-[0_0_15px_rgba(203,161,53,0.5)]">
+                        <span class="font-title text-fantasy-gold text-lg leading-none pt-1">₹</span>
+                    </div>
+                    <span class="font-title text-xl sm:text-2xl text-white tracking-widest uppercase group-hover:text-fantasy-gold transition-colors duration-300">
+                        Em Nome do Fogo
+                    </span>
+                </a>
+
+                <!-- Navegação Desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="livro.html" class="nav-link font-title uppercase tracking-widest text-sm text-fantasy-muted hover:text-white pt-1">Capítulos</a>
+                    <a href="mapas.html" class="nav-link active font-title uppercase tracking-widest text-sm text-fantasy-muted hover:text-white pt-1">Mapas</a>
+                    <a href="autor.html" class="nav-link font-title uppercase tracking-widest text-sm text-fantasy-muted hover:text-white pt-1">Notas do Autor</a>
+                </nav>
+
+                <!-- Botão Menu Mobile -->
+                <button class="md:hidden text-fantasy-gold text-2xl hover:text-white transition-colors">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 flex-grow flex flex-col items-center justify-center py-12 px-4 sm:px-6 w-full max-w-7xl mx-auto">
+        
+        <!-- Títulos da Página -->
+        <div class="text-center mb-10 w-full">
+            <h1 class="font-title text-4xl sm:text-5xl text-white uppercase tracking-[0.2em] mb-3 text-glow">
+                Mapas
+            </h1>
+            <p class="font-title text-fantasy-red text-sm sm:text-base tracking-widest uppercase opacity-90">
+                Onde o fogo desenha as fronteiras
+            </p>
+        </div>
+
+        <!-- Container do Carrossel -->
+        <div class="relative w-full max-w-5xl aspect-[4/3] sm:aspect-[16/9] bg-black/40 border border-fantasy-red/40 rounded-sm shadow-[0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-sm overflow-hidden flex items-center justify-center group">
+            
+            <!-- Mapa 1 -->
+            <article class="map-slide absolute inset-0 w-full h-full flex flex-col opacity-100 z-10">
+                <!-- Imagem (Placeholder) -->
+                <div class="relative w-full h-full">
+                    <img src="https://placehold.co/1200x800/120a07/cba135?text=Mapa+do+Continente+do+Poente&font=Lora" alt="Mapa do Continente do Poente" class="w-full h-full object-cover opacity-70 sepia-[0.3]">
+                    
+                    <!-- Gradiente escuro na base para o texto -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                    
+                    <!-- Conteúdo do Mapa -->
+                    <div class="absolute bottom-0 left-0 w-full p-6 sm:p-10 text-left">
+                        <h2 class="font-title text-2xl sm:text-3xl text-fantasy-gold mb-2 tracking-wider text-glow">
+                            O Poente
+                        </h2>
+                        <p class="text-fantasy-muted text-sm sm:text-base max-w-2xl leading-relaxed drop-shadow-md">
+                            Também conhecido como o <i>Novo Mundo</i>, o Poente foi descoberto pelos valenthianos no ano de 1227 d.C. (<i>depois da Chama</i>) e continua sendo alvo de Grandes Casas e mercadores que buscam expandir suas riquezas e influência. A geografia do continente é marcada por vastas planícies, montanhas imponentes e rios que cortam o território. O Poente é um lugar de beleza e perigo que esconde segredos esperando para serem desvendados.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Mapa 2 -->
+            <article class="map-slide absolute inset-0 w-full h-full flex flex-col opacity-0 pointer-events-none z-0">
+                <!-- Imagem (Placeholder) -->
+                <div class="relative w-full h-full">
+                    <img src="https://placehold.co/1200x800/1a0b0b/e5d9b5?text=Províncias+das+Cinzas&font=Lora" alt="Indisponível" class="w-full h-full object-cover opacity-70 sepia-[0.4]">
+                    
+                    <!-- Gradiente escuro na base para o texto -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                    
+                    <!-- Conteúdo do Mapa -->
+                    <div class="absolute bottom-0 left-0 w-full p-6 sm:p-10 text-left">
+                        <h2 class="font-title text-2xl sm:text-3xl text-white mb-2 tracking-wider text-glow">
+                            A Aurora
+                        </h2>
+                        <p class="text-fantasy-muted text-sm sm:text-base max-w-2xl leading-relaxed drop-shadow-md">
+                            Terras dos valenthianos e dos shinëzios, a Aurora é um território de contrastes, onde a beleza se mistura com a guerra. É um lugar que será explorado no futuro.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Botões de Navegação -->
+            <button id="btn-prev" class="carousel-btn absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center rounded-sm z-20 cursor-pointer" aria-label="Mapa Anterior">
+                <span class="font-title text-xl sm:text-3xl mt-1">&#10094;</span>
+            </button>
+            
+            <button id="btn-next" class="carousel-btn absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center rounded-sm z-20 cursor-pointer" aria-label="Próximo Mapa">
+                <span class="font-title text-xl sm:text-3xl mt-1">&#10095;</span>
+            </button>
+
+            <!-- Indicador de Páginas -->
+            <div class="absolute top-4 right-6 z-20 bg-black/60 px-3 py-1 rounded border border-fantasy-red/30">
+                <span id="map-counter" class="font-title text-fantasy-gold text-sm tracking-widest">1 / 2</span>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="relative z-20 border-t border-fantasy-red/20 bg-black/80 backdrop-blur-sm py-6 text-center mt-auto">
+        <p class="font-title text-fantasy-muted text-xs sm:text-sm tracking-widest opacity-60">
+            &copy; <span id="year"></span> Em Nome do Fogo — Lucas M. Alves
+        </p>
+    </footer>
+
+    <script>
+        // --- Lógica do Carrossel ---
+        const slides = document.querySelectorAll('.map-slide');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const counter = document.getElementById('map-counter');
+        let currentMap = 0;
+
+        function updateCarousel() {
+            slides.forEach((slide, index) => {
+                if (index === currentMap) {
+                    slide.classList.remove('opacity-0', 'pointer-events-none');
+                    slide.classList.add('opacity-100');
+                    slide.style.zIndex = '10';
+                } else {
+                    slide.classList.remove('opacity-100');
+                    slide.classList.add('opacity-0', 'pointer-events-none');
+                    slide.style.zIndex = '0';
+                }
+            });
+            counter.innerText = `${currentMap + 1} / ${slides.length}`;
+        }
+
+        btnNext.addEventListener('click', () => {
+            currentMap = (currentMap + 1) % slides.length;
+            updateCarousel();
+        });
+
+        btnPrev.addEventListener('click', () => {
+            currentMap = (currentMap - 1 + slides.length) % slides.length;
+            updateCarousel();
+        });
+
+        // --- Sistema de Partículas (Fagulhas) ---
+        const particlesContainer = document.getElementById('particles');
+        
+        function createEmbers() {
+            const numEmbers = 40; 
+            
+            for (let i = 0; i < numEmbers; i++) {
+                let ember = document.createElement('div');
+                ember.className = 'ember';
+                
+                let size = Math.random() * 3 + 1; 
+                let left = Math.random() * 100; 
+                let duration = Math.random() * 10 + 5; 
+                let delay = Math.random() * 8; 
+                
+                ember.style.width = `${size}px`;
+                ember.style.height = `${size}px`;
+                ember.style.left = `${left}%`;
+                ember.style.animationDuration = `${duration}s`;
+                ember.style.animationDelay = `${delay}s`;
+                
+                if (Math.random() > 0.6) {
+                    ember.style.backgroundColor = '#cba135';
+                    ember.style.boxShadow = '0 0 8px #cba135, 0 0 15px #ff6600';
+                }
+                
+                particlesContainer.appendChild(ember);
+            }
+        }
+
+        // --- Inicialização ---
+        window.onload = function() {
+            createEmbers();
+            document.getElementById('year').textContent = new Date().getFullYear();
+            updateCarousel(); // Garante o estado inicial do carrossel
+        };
+    </script>
+</body>
+</html>
