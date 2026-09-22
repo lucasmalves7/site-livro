@@ -1,7 +1,259 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0907"><title>Autor | Em Nome do Fogo</title><link rel="stylesheet" href="styles.css">
-<!-- NOVO: config.js e auth.js -->
-<script src="config.js"></script>
-<script src="auth.js"></script>
-<!-- NOVO: página em construção — bloqueia acesso direto pela URL também -->
-<script>bloquearAcessoDiretoEmConstrucao();</script>
-</head><body><header class="site-header"><a class="brand" href="index.html"><img src="assets/logo.svg" alt="Símbolo de Em Nome do Fogo"><span>Em Nome do Fogo</span></a><button class="menu-btn" aria-label="Abrir menu">☰</button><nav class="nav"><a href="livro.html">Livro</a><a href="mapas.html">Mapas</a><a href="personagens.html">Personagens</a><a href="autor.html" class="active">Autor</a></nav></header><main class="page-shell"><h1 class="page-title">Autor</h1><section class="author-card"><div class="author-photo image-slot"><span>Imagem do autor</span></div><article class="author-copy"><h2>Sobre o autor</h2><p>Insira aqui a biografia do autor, suas influências, o processo de criação de <em>Em Nome do Fogo</em> e outras informações relevantes.</p><p>Este campo foi mantido propositalmente simples para que o conteúdo possa ser alterado diretamente no arquivo <strong>autor.html</strong>.</p></article></section></main><footer class="site-footer">© Em Nome do Fogo — códice digital.</footer><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>Notas do Autor | Em Nome do Fogo</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fantasy: {
+                            darkest: '#050505',
+                            dark: '#120a07',
+                            red: '#7a0000',
+                            gold: '#cba135',
+                            muted: '#e5d9b5'
+                        }
+                    },
+                    fontFamily: {
+                        title: ['"Cinzel Decorative"', 'serif'],
+                        body: ['"Lora"', 'serif'],
+                    },
+                    backgroundImage: {
+                        'fire-gradient': 'radial-gradient(circle at center, #2a0505 0%, #050505 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5d9b5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Efeitos de texto */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(203, 161, 53, 0.4), 0 0 20px rgba(122, 0, 0, 0.5);
+        }
+
+        /* Navegação */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #7a0000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px #7a0000;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        .nav-link.active {
+            color: #cba135;
+        }
+
+        /* Botões (mesmo estilo dos botões do carrossel de Mapas) */
+        .carousel-btn {
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid #7a0000;
+            color: #cba135;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .carousel-btn:hover {
+            background: rgba(122, 0, 0, 0.4);
+            border-color: #cba135;
+            box-shadow: 0 0 15px rgba(122, 0, 0, 0.8), inset 0 0 10px rgba(203, 161, 53, 0.2);
+            color: #fff;
+        }
+
+        /* Partículas (Fagulhas) */
+        .ember {
+            position: fixed;
+            background-color: #ff6600;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            animation: float-up linear infinite;
+            z-index: 0;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(100vh) scale(1); opacity: 1; box-shadow: 0 0 10px #ff6600, 0 0 20px #ff0000; }
+            100% { transform: translateY(-10vh) scale(0.2); opacity: 0; }
+        }
+
+        /* Vinheta */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle, transparent 50%, #000000 120%);
+            z-index: 1;
+        }
+
+        /* Moldura da imagem do autor */
+        .image-slot {
+            background: linear-gradient(135deg, #120a07, #050505);
+            border: 1px dashed rgba(203, 161, 53, 0.45);
+        }
+        .image-slot img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+
+<body class="font-body bg-fire-gradient selection:bg-fantasy-red selection:text-white">
+
+    <!-- Container de Fagulhas -->
+    <div id="particles" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+    <div class="vignette"></div>
+
+    <header class="relative z-20 w-full border-b border-fantasy-red/30 bg-black/60 backdrop-blur-md shadow-[0_4px_30px_rgba(122,0,0,0.2)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Marca / Logo -->
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-full border-2 border-fantasy-red flex items-center justify-center group-hover:border-fantasy-gold transition-colors duration-300 shadow-[0_0_10px_rgba(122,0,0,0.5)] group-hover:shadow-[0_0_15px_rgba(203,161,53,0.5)]">
+                        <span class="font-title text-fantasy-gold text-lg leading-none pt-1">₹</span>
+                    </div>
+                    <span class="font-title text-xl sm:text-2xl text-white tracking-widest uppercase group-hover:text-fantasy-gold transition-colors duration-300">
+                        Em Nome do Fogo
+                    </span>
+                </a>
+
+                <!-- Navegação Desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="livro.html" class="nav-link font-title uppercase tracking-widest text-sm text-fantasy-muted hover:text-white pt-1">Capítulos</a>
+                    <a href="mapas.html" class="nav-link font-title uppercase tracking-widest text-sm text-fantasy-muted hover:text-white pt-1">Mapas</a>
+                    <a href="autor.html" class="nav-link active font-title uppercase tracking-widest text-sm text-fantasy-muted hover:text-white pt-1">Notas do Autor</a>
+                </nav>
+
+                <!-- Botão Menu Mobile -->
+                <button id="menu-btn" class="md:hidden text-fantasy-gold text-2xl hover:text-white transition-colors" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
+                    ☰
+                </button>
+            </div>
+        </div>
+
+        <!-- Navegação Mobile -->
+        <nav id="mobile-nav" class="hidden md:hidden border-t border-fantasy-red/30 bg-black/80 px-4 py-2 flex-col">
+            <a href="livro.html" class="font-title uppercase tracking-widest text-sm py-3 border-b border-fantasy-red/20 text-fantasy-muted hover:text-white transition-colors">Livro</a>
+            <a href="mapas.html" class="font-title uppercase tracking-widest text-sm py-3 border-b border-fantasy-red/20 text-fantasy-muted hover:text-white transition-colors">Mapas</a>
+            <a href="autor.html" class="font-title uppercase tracking-widest text-sm py-3 text-fantasy-gold hover:text-white transition-colors">Notas do Autor</a>
+        </nav>
+    </header>
+
+    <main class="relative z-10 flex-grow flex flex-col items-center justify-center py-12 px-4 sm:px-6 w-full max-w-7xl mx-auto">
+
+        <!-- Títulos da Página -->
+        <div class="text-center mb-10 w-full">
+            <h1 class="font-title text-4xl sm:text-5xl text-white uppercase tracking-[0.2em] mb-3 text-glow">
+                Notas do Autor
+            </h1>
+            <p class="font-title text-fantasy-red text-sm sm:text-base tracking-widest uppercase opacity-90">
+                Por trás das chamas
+            </p>
+        </div>
+
+        <!-- Cartão do Autor -->
+        <section class="w-full max-w-5xl grid md:grid-cols-[340px_1fr] bg-black/40 border border-fantasy-red/40 rounded-sm shadow-[0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-sm overflow-hidden">
+
+            <!-- Imagem do autor: para usar uma foto, troque o <span> por
+                 <img src="assets/nome-do-arquivo.jpg" alt="Foto do autor"> -->
+            <div class="image-slot min-h-[320px] md:min-h-[480px] flex items-center justify-center m-4 md:m-6 rounded-sm">
+                <span class="font-title text-fantasy-gold/60 text-sm tracking-widest uppercase text-center px-4">Imagem do autor</span>
+            </div>
+
+            <article class="p-6 sm:p-10 md:pl-4 flex flex-col justify-center">
+                <h2 class="font-title text-2xl sm:text-3xl text-fantasy-gold mb-5 tracking-wider text-glow">
+                    Sobre o autor
+                </h2>
+                <p class="text-fantasy-muted text-sm sm:text-base leading-relaxed mb-4">
+                    Insira aqui a biografia do autor, suas influências, o processo de criação de <em>Em Nome do Fogo</em> e outras informações relevantes.
+                </p>
+                <p class="text-fantasy-muted text-sm sm:text-base leading-relaxed">
+                    Este campo foi mantido propositalmente simples para que o conteúdo possa ser alterado diretamente no arquivo <strong class="text-fantasy-gold">autor.html</strong>.
+                </p>
+            </article>
+        </section>
+
+    </main>
+
+    <footer class="relative z-20 border-t border-fantasy-red/20 bg-black/80 backdrop-blur-sm py-6 text-center mt-auto">
+        <p class="font-title text-fantasy-muted text-xs sm:text-sm tracking-widest opacity-60">
+            &copy; <span id="year"></span> Em Nome do Fogo — Lucas M. Alves
+        </p>
+    </footer>
+
+    <script>
+
+        // --- Menu Mobile ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileNav = document.getElementById('mobile-nav');
+
+        menuBtn.addEventListener('click', () => {
+            const isOpen = mobileNav.classList.toggle('hidden') === false;
+            mobileNav.classList.toggle('flex', isOpen);
+            menuBtn.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        // --- Sistema de Partículas (Fagulhas) ---
+        const particlesContainer = document.getElementById('particles');
+        
+        function createEmbers() {
+            const numEmbers = 40; 
+            
+            for (let i = 0; i < numEmbers; i++) {
+                let ember = document.createElement('div');
+                ember.className = 'ember';
+                
+                let size = Math.random() * 3 + 1; 
+                let left = Math.random() * 100; 
+                let duration = Math.random() * 10 + 5; 
+                let delay = Math.random() * 8; 
+                
+                ember.style.width = `${size}px`;
+                ember.style.height = `${size}px`;
+                ember.style.left = `${left}%`;
+                ember.style.animationDuration = `${duration}s`;
+                ember.style.animationDelay = `${delay}s`;
+                
+                if (Math.random() > 0.6) {
+                    ember.style.backgroundColor = '#cba135';
+                    ember.style.boxShadow = '0 0 8px #cba135, 0 0 15px #ff6600';
+                }
+                
+                particlesContainer.appendChild(ember);
+            }
+        }
+
+        // --- Inicialização ---
+        window.onload = function() {
+            createEmbers();
+            document.getElementById('year').textContent = new Date().getFullYear();
+        };
+    </script>
+</body>
+</html>

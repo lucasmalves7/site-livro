@@ -1,49 +1,22 @@
-EM NOME DO FOGO — SITE (FRONT-END)
+EM NOME DO FOGO — SITE ESTÁTICO
 
 Abra index.html no navegador.
 
 Arquivos principais:
-- index.html: tela inicial, login e criação de conta
-- livro.html: manuscrito completo em pergaminho rolável (página inicial após login)
-- mapas.html: EM CONSTRUÇÃO (bloqueada)
-- personagens.html: EM CONSTRUÇÃO (bloqueada)
-- autor.html: EM CONSTRUÇÃO (bloqueada)
+- index.html: tela inicial e acesso local
+- livro.html: manuscrito completo em pergaminho rolável
+- mapas.html: campos para mapas
+- personagens.html: carrossel de personagens
+- autor.html: imagem e biografia
 - styles.css: todo o visual e responsividade
-- config.js: [NOVO] endereço (URL) do backend Spring Boot
-- auth.js: [NOVO] login, criação de conta, proteção de páginas e bloqueio
-  das páginas em construção — tudo conectado ao backend via fetch()
-- script.js: menu, abas, carrossel de personagens, tamanho da fonte e
-  efeito de brasas (SEM lógica de login — isso foi para auth.js)
+- script.js: login local, menu, partículas, tamanho da fonte e personagens
 
-COMO FICOU A AUTENTICAÇÃO
-- Criar conta e Login agora enviam os dados via fetch() para o backend
-  Spring Boot (endereço configurado em config.js), em vez de comparar
-  dados salvos no localStorage.
-- Endpoints esperados no backend:
-    POST {API_BASE_URL}/auth/registro  { email, senha } -> 201 / 409
-    POST {API_BASE_URL}/auth/login     { email, senha } -> 200 { token } / 401
-- Após o login bem-sucedido, o token é salvo no localStorage e o usuário
-  é levado automaticamente para livro.html.
-- livro.html, mapas.html, personagens.html e autor.html verificam, assim
-  que a página carrega, se existe um token salvo. Se não existir, o
-  usuário é redirecionado de volta para index.html — ou seja, ninguém
-  acessa essas páginas sem antes ter criado conta e autenticado.
-- O botão "Sair" (em livro.html) apaga o token salvo e volta para a tela
-  de login.
+IMPORTANTE SOBRE LOGIN
+O login é apenas demonstrativo e usa localStorage. Para autenticação real e banco de dados, será necessário conectar o front-end a uma API/servidor.
 
-PÁGINAS EM CONSTRUÇÃO
-- Ao clicar em "Mapas", "Personagens" ou "Autor" no menu, aparece o alert
-  "Página ainda em construção" e a navegação é cancelada.
-- Se alguém tentar abrir essas páginas digitando a URL direto no
-  navegador, elas também bloqueiam o acesso e redirecionam de volta.
-- Quando essas seções estiverem prontas, é só remover o bloqueio em
-  auth.js (constante PAGINAS_EM_CONSTRUCAO e as chamadas de
-  bloquearAcessoDiretoEmConstrucao nos respectivos arquivos .html).
-
-IMPORTANTE
-Este é só o front-end. É necessário que o backend Spring Boot esteja no
-ar, com os endpoints /auth/registro e /auth/login implementados e
-conectados a um banco de dados, para o login funcionar de verdade.
+COMO ADICIONAR IMAGENS
+Coloque os arquivos na pasta assets e substitua os campos indicados por tags <img>. No carrossel, edite o vetor chars em script.js e informe image:'assets/nome-do-arquivo.jpg'.
 
 COMO VAI FUNCIONAR A ARQUITETURA:
 [ Front-end (HTML/JS) ] ──( Requisição HTTP / JSON )──> [ Backend (Spring Boot) ] ──( JPA / Hibernate )──> [ Banco (SQL Server) ]
+
